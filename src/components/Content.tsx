@@ -1,53 +1,49 @@
-import React, { ChangeEvent, ChangeEventHandler, useCallback, useState } from "react"
+import React, { ChangeEvent, useCallback, useState } from "react"
 import axios from "axios";
+import "./Content.css"
 
-
-const Content: React.FC =  () => {
-
-  type DataState = {
-    name: string,
-    main: {
-      temp: number,
-      feels_like: number,
-      humidity: number
-    }
-    weather: {
-      0:{
-        main:string
-      }
-    }
-    wind: {
-      speed:number
-    }
-    
-    
-
+type DataState = {
+  name: string,
+  main: {
+    temp: number,
+    feels_like: number,
+    humidity: number
   }
-  
-    const [data,setData] = useState<DataState>({} as DataState )
-    const [location, setLocation]= useState("")
-    const url = `https://api.openweathermap.org/data/2.5/weather?q=${location}&units=metric&hourly=${location}&appid=e595263b1e9f24f4657f185b135dac93`
-   
+  weather: {
+    0:{
+      main:string
+    }
+  }
+  wind: {
+    speed:number
+  }
+}
 
- const addCity = async (event:any) => {
- if(event.key === "Enter"){
- await axios.get(url)
-  .then((res)=> {
-   setData(res.data)
-  
- })
- .catch((error:Error)=>{
-  alert("Такой город не существует")
- })
- setLocation("") 
-}
-}
+const Content: React.FC = () => {
+
+  const [data,setData] = useState<DataState>({} as DataState )
+  const [location, setLocation]= useState("")
+  const url = `https://api.openweathermap.org/data/2.5/weather?q=${location}&units=metric&hourly=${location}&appid=e595263b1e9f24f4657f185b135dac93`
+   
+  const addCity = async (event:any) => {
+    if(event.key === "Enter") {
+      await axios.get(url)
+        .then((res)=> {
+        setData(res.data)
+        
+      })
+      .catch((error:Error)=>{
+        alert("Такой город не существует")
+      })
+      setLocation("") 
+    }
+  }
 
 const updateValue = useCallback((e:ChangeEvent<HTMLInputElement>) => {
   setLocation(e.target.value)
-},[location])
+  
+},[])
 
- 
     return(
       <div className="box">       
           <div  className="input-box">
